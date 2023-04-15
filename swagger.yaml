@@ -180,11 +180,9 @@ paths:
                 - $ref: "#/components/schemas/updatepasswordrequest1"
                 - example:
                     identifier: anzhy
-                    oldPassword: secure
                     password: secure1
             example:
               identifier: anzhy
-              oldPassword: secure
               password: secure1
         required: true
       responses:
@@ -328,19 +326,15 @@ components:
       title: updatepasswordrequest1
       required:
         - identifier
-        - oldPassword
         - password
       type: object
       properties:
         identifier:
           type: string
-        oldPassword:
-          type: string
         password:
           type: string
       example:
         identifier: anzhy
-        oldPassword: secure
         password: secure1
     SignuprequestRequest:
       title: SignuprequestRequest
