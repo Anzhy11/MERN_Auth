@@ -1,13 +1,13 @@
 {
-  "name": "server",
+  "name": "mern-auth",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "node server.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Ahmed Adebayo",
   "license": "ISC",
   "devDependencies": {
     "nodemon": "^2.0.22"
