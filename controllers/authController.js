@@ -170,25 +170,16 @@ const createResetSession = async (req, res) => {
 
 // PUT: http://localhost:5050/api/v1/resetPassword
 const resetPassword = async (req, res) => {
-    const { password, oldPassword } = req.body;
+    const { password } = req.body;
     const user = req.user;
 
-    if (!password && !oldPassword) {
+    if (!password) {
         throw new BadRequestError('Fields cannot be empty')
-    }
-    if (oldPassword === password) {
-        throw new BadRequestError('your old password can not be your new password')
     }
 
     try {
         // ckeck if session is still active
         if (!req.app.locals.resetSession) return res.status(440).send({ error: "Session expired!" });
-
-
-        const isOldPasswordCorrect = await user.comparePassword(password)
-        if (isOldPasswordCorrect) {
-            throw new UnauthenticatedError('Invalid Credentials')
-        }
 
         const salt = await bcrypt.genSalt(10)
         const newPassword = await bcrypt.hash(password, salt)
