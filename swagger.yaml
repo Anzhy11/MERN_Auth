@@ -1,0 +1,377 @@
+openapi: 3.0.0
+info:
+  title: mern API
+  contact: {}
+  version: '1.0'
+servers:
+- url: https://mern-auth-thne.onrender.com/api/v1
+  variables: {}
+paths:
+  /updateUser:
+    put:
+      tags:
+      - User
+      summary: Update User Details
+      operationId: UpdateUserDetails
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/updateuserdetailsrequest'
+              - example:
+                  username: anzhy
+                  firstName: Chris
+                  address: 9, jds
+            example:
+              username: anzhy
+              firstName: Chris
+              address: 9, jds
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /updatePassword:
+    put:
+      tags:
+      - User
+      summary: Update Password
+      operationId: UpdatePassword
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/UpdatePasswordRequest'
+              - example:
+                  oldPassword: secure1
+                  password: secure
+            example:
+              oldPassword: secure1
+              password: secure
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /registerMail:
+    post:
+      tags:
+      - Auth
+      summary: Register Email
+      operationId: RegisterEmail
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/registeremailrequest'
+              - example:
+                  username: test123
+                  userEmail: harnzzy@gmail.com
+                  text: testing
+                  subject: testing
+            example:
+              username: test123
+              userEmail: harnzzy@gmail.com
+              text: testing
+              subject: testing
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+  /user/{identifier}:
+    parameters:
+      - in: path
+        name: identifier
+        schema:
+          type: string
+        required: true
+        description: The user ID
+    get:
+      tags:
+      - Auth
+      summary: get user info
+      operationId: getuserinfo
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+  /authenticate:
+    post:
+      tags:
+      - Auth
+      summary: Verify User
+      operationId: VerifyUser
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/verifyusernamerequest'
+              - example:
+                  identifier: anxhy
+            example:
+              identifier: anxhy
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+  /login:
+    post:
+      tags:
+      - Auth
+      summary: Login User
+      operationId: LoginUser
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/SIgninpostrequestRequest'
+              - example:
+                  identifier: anzhy@test.com
+                  password: secure
+            example:
+              identifier: anzhy@test.com
+              password: secure
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+  /resetPassword:
+    put:
+      tags:
+      - Auth
+      summary: Reset Password
+      operationId: ResetPassword
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/updatepasswordrequest1'
+              - example:
+                  identifier: anzhy
+                  oldPassword: secure
+                  password: secure1
+            example:
+              identifier: anzhy
+              oldPassword: secure
+              password: secure1
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+  /register:
+    post:
+      tags:
+      - Auth
+      summary: Register User
+      operationId: RegisterUser
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/SignuprequestRequest'
+              - example:
+                  username: anxhy
+                  password: secure
+                  email: anzhy@test.com
+                  profile: sgsjhjsd
+            example:
+              username: anxhy
+              password: secure
+              email: anzhy@test.com
+              profile: sgsjhjsd
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+  /user/{identifier}:
+    parameters:
+      - in: path
+        name: identifier
+        schema:
+          type: string
+        required: true
+        description: The user 
+    put:
+      tags:
+      - Auth
+      summary: Verify email
+      operationId: Verifyemail
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+components:
+  schemas:
+    updateuserdetailsrequest:
+      title: updateuserdetailsrequest
+      required:
+      - username
+      - firstName
+      - address
+      type: object
+      properties:
+        username:
+          type: string
+        firstName:
+          type: string
+        address:
+          type: string
+      example:
+        username: anzhy
+        firstName: Chris
+        address: 9, jds
+    UpdatePasswordRequest:
+      title: UpdatePasswordRequest
+      required:
+      - oldPassword
+      - password
+      type: object
+      properties:
+        oldPassword:
+          type: string
+        password:
+          type: string
+      example:
+        oldPassword: secure1
+        password: secure
+    registeremailrequest:
+      title: registeremailrequest
+      required:
+      - username
+      - userEmail
+      - text
+      - subject
+      type: object
+      properties:
+        username:
+          type: string
+        userEmail:
+          type: string
+        text:
+          type: string
+        subject:
+          type: string
+      example:
+        username: test123
+        userEmail: harnzzy@gmail.com
+        text: testing
+        subject: testing
+    verifyusernamerequest:
+      title: verifyusernamerequest
+      required:
+      - identifier
+      type: object
+      properties:
+        identifier:
+          type: string
+      example:
+        identifier: anxhy
+    SIgninpostrequestRequest:
+      title: SIgninpostrequestRequest
+      required:
+      - identifier
+      - password
+      type: object
+      properties:
+        identifier:
+          type: string
+        password:
+          type: string
+      example:
+        identifier: anzhy@test.com
+        password: secure
+    updatepasswordrequest1:
+      title: updatepasswordrequest1
+      required:
+      - identifier
+      - oldPassword
+      - password
+      type: object
+      properties:
+        identifier:
+          type: string
+        oldPassword:
+          type: string
+        password:
+          type: string
+      example:
+        identifier: anzhy
+        oldPassword: secure
+        password: secure1
+    SignuprequestRequest:
+      title: SignuprequestRequest
+      required:
+      - username
+      - password
+      - email
+      - profile
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        email:
+          type: string
+        profile:
+          type: string
+      example:
+        username: anxhy
+        password: secure
+        email: anzhy@test.com
+        profile: sgsjhjsd
+  securitySchemes:
+    httpBearer:
+      type: http
+      scheme: bearer
+security:
+- httpBearer: []
+tags:
+- name: User
+  description: ''
+- name: Auth
+  description: ''
