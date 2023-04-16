@@ -37,9 +37,8 @@ let MailGenerator = new Mailgen({
 */
 const registerMail = async (req, res) => {
     const { username, userEmail, text, subject, OTP } = req.body;
-    const { registerToken } = req.user
 
-    if (registerToken) {
+    if (req.user.registerToken) {
         // body of the email
         var email = {
             body: {
@@ -50,27 +49,25 @@ const registerMail = async (req, res) => {
                     button: {
                         color: '#22BC66', // Optional action button color
                         text: 'Confirm your account',
-                        link: `http://localhost:5050/apv/v1/user/${registerToken}`
+                        link: `http://localhost:5050/apv/v1/user/${req.user.registerToken}`
                     }
                 },
                 outro: 'Need help, or have questions? Just reply to this email, we\'d love to help.'
             }
-        }
+        };
     } else {
         // body of the email
         var email = {
             body: {
                 name: username,
-                intro: text || 'Welcome to Mailgen! We\'re very excited to have you on board.',
-                action: {
-                    instructions: `Enter this otp to reset your password ${OTP}`
-                },
+                intro: `${text}: ${OTP} ` || `Welcome to Mailgen! We\'re very excited to have you on board.`,
+                // action: {
+                //     instructions: `Enter this otp to reset your password ${OTP}`
+                // },
                 outro: 'Need help, or have questions? Just reply to this email, we\'d love to help.'
             }
-        }
+        };
     }
-
-
 
     var emailBody = MailGenerator.generate(email);
 
