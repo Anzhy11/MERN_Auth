@@ -4,7 +4,6 @@ const { BadRequestError, UnauthenticatedError, NotFoundError } = require('../err
 const otpGenerator = require('otp-generator');
 const bcrypt = require('bcrypt');
 const { registerToken } = require('../utils/gen-registerToken.js')
-const registerMail = require('./mailer');
 
 
 /** POST: http://localhost:5050/api/v1/register 
