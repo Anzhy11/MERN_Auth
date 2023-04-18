@@ -15,13 +15,14 @@ const { registerToken } = require('../utils/gen-registerToken.js')
   "lastName": "test",
   "mobile": 8009860560,
   "address" : "9, Odonguyan, Ikorodu",
-  "profile": "image"
+  "profile": ""
 }
 */
 const register = async (req, res) => {
     const profile = req.body.profile || ''
 
     const user = await User.create({ registerToken, profile, ...req.body });
+    const token = user.createJWT()
     res
         .status(StatusCodes.CREATED)
         .json({
@@ -31,26 +32,26 @@ const register = async (req, res) => {
                 email: user.email,
                 profile: user.profile,
                 registerToken: user.registerToken
-            }
+            },
+            token
         })
 }
 
 // GET: http://localhost:5050/api/v1/user/registerToken
 const verifyEmail = async (req, res) => {
-    const { registerToken, email } = req.body;
-    const user = await User.findOne({ email });
-    console.log(registerToken, email);
+    const { registerToken } = req.params;
+    if (!registerToken) {
+        throw new BadRequestError("Invalid token");
+    }
+    // check if user exists 
+    const user = await User.findOne({ registerToken });
     if (!user) {
-        throw new UnauthenticatedError('Verification Failed')
+        throw new UnauthenticatedError("Email already verified")
     }
-
-    if (user.registerToken !== registerToken) {
-        throw new UnauthenticatedError('Verification Failed. Invalid token')
-    }
-    (user.isVerified = true), (user.verified = Date.now());
-    user.registerToken = '';
-
-    await user.save();
+    await User.findOneAndUpdate(
+        { registerToken },
+        { isVerified: true, registerToken: "" }
+    )
 
     res.status(StatusCodes.OK).json({ msg: "Email verified" });
 }
@@ -86,8 +87,8 @@ const login = async (req, res) => {
         throw new UnauthenticatedError('Invalid Credentials')
     }
 
-    // generate token
-    const token = user.createJWT(identifier)
+    // compare password
+    const token = user.createJWT()
 
     // Respond with success message, username, and token
     res
@@ -139,11 +140,9 @@ const getUser = async (req, res) => {
 
 
 // GET: http://localhost:5050/api/v1/generateOTP
-const generateOTP = async (req, res) => {
-    const { email, username } = req.user;
-
+const generateOTP = (req, res) => {
     req.app.locals.OTP = otpGenerator.generate(6, { lowerCaseAlphabets: false, upperCaseAlphabets: false, specialChars: false })
-    res.status(StatusCodes.CREATED).send({ code: req.app.locals.OTP, userEmail: email, username })
+    res.status(StatusCodes.CREATED).send({ code: req.app.locals.OTP })
 }
 
 
@@ -182,7 +181,7 @@ const resetPassword = async (req, res) => {
         if (!req.app.locals.resetSession) return res.status(440).send({ error: "Session expired!" });
 
         const salt = await bcrypt.genSalt(10)
-        const newPassword = await bcrypt.hash(password, salt);
+        const newPassword = await bcrypt.hash(password, salt)
 
         // update the data
         const updatePassword = await User.findByIdAndUpdate(
@@ -193,7 +192,7 @@ const resetPassword = async (req, res) => {
         if (!updatePassword) {
             throw new NotFoundError(`No user found with id : ${user._id}`)
         }
-        res.status(StatusCodes.CREATED).json({ msg: "Record Updated...!" });
+        res.status(StatusCodes.OK).json({ msg: "Record Updated...!" });
     } catch (error) {
         return res.status(StatusCodes.UNAUTHORIZED).send({ error })
     }

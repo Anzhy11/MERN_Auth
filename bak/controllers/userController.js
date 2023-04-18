@@ -15,10 +15,18 @@ body: {
 */
 const updateUser = async (req, res) => {
     const {
-        body: { profile, firstName, lastName, address, mobile },
+        body: { username, profile, firstName, address },
         user: { userId },
     } = req;
-    update = { profile, firstName, lastName, address, mobile }
+    update = { username, profile, firstName, address }
+
+    // Check uniqueness
+    if (username) {
+        const user = await User.findOne({ username })
+        if (user) {
+            throw new UnauthenticatedError('Try another username')
+        }
+    }
 
     // update the data
     const updateUser = await User.findByIdAndUpdate(

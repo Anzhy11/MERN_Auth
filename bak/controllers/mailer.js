@@ -36,8 +36,7 @@ let MailGenerator = new Mailgen({
 }
 */
 const registerMail = async (req, res) => {
-    const { username, userEmail, text, subject } = req.body;
-    const origin = "https://auth-rst.netlify.app"
+    const { username, userEmail, text, subject, OTP } = req.body;
 
     if (req.user.registerToken) {
         // body of the email
@@ -50,7 +49,7 @@ const registerMail = async (req, res) => {
                     button: {
                         color: '#22BC66', // Optional action button color
                         text: 'Confirm your account',
-                        link: `${origin}/user/verify-email?registerToken=${req.user.registerToken}&email=${userEmail}`
+                        link: `http://localhost:5050/apv/v1/user/${req.user.registerToken}`
                     }
                 },
                 outro: 'Need help, or have questions? Just reply to this email, we\'d love to help.'
@@ -61,7 +60,7 @@ const registerMail = async (req, res) => {
         var email = {
             body: {
                 name: username,
-                intro: text || `Welcome to Mailgen! We\'re very excited to have you on board.`,
+                intro: `${text}: ${OTP} ` || `Welcome to Mailgen! We\'re very excited to have you on board.`,
                 // action: {
                 //     instructions: `Enter this otp to reset your password ${OTP}`
                 // },

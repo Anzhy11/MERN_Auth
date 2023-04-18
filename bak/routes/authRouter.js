@@ -28,7 +28,7 @@ router.route('/createResetSession').get(createResetSession) // reset all the var
 
 
 // PUT Methods
-router.route('/user/verify-token').post(verifyEmail) // verify user register token
+router.route('/user/:registerToken').put(verifyEmail) // verify user register token
 router.route('/resetPassword').put(VerifyUser, resetPassword); // use to reset password
 
 
